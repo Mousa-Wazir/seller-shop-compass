@@ -1,31 +1,62 @@
 
 import { useState } from "react";
-import { Menu, X, Bell, Home, Package, ShoppingCart, Truck, CreditCard, User, Plus, BarChart3 } from "lucide-react";
+import { Menu, X, Search, User, MessageSquare, Star, Package, Plus, Settings, LogOut } from "lucide-react";
 import Dashboard from "../components/Dashboard";
 import AddProduct from "../components/AddProduct";
 import MyProducts from "../components/MyProducts";
-import RentalProducts from "../components/RentalProducts";
-import DeliveryTracking from "../components/DeliveryTracking";
-import Payments from "../components/Payments";
+import RentalManagement from "../components/RentalManagement";
+import Reviews from "../components/Reviews";
+import RealTimeChat from "../components/RealTimeChat";
 import ProfileSettings from "../components/ProfileSettings";
 
 const Index = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("dashboard");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchResults, setSearchResults] = useState([]);
 
   const navigationItems = [
-    { id: "dashboard", label: "Dashboard Overview", icon: BarChart3 },
-    { id: "add-product", label: "Add / Update Product", icon: Plus },
+    { id: "dashboard", label: "Dashboard Overview", icon: Package },
     { id: "my-products", label: "My Products", icon: Package },
-    { id: "rental-products", label: "Rental Products", icon: ShoppingCart },
-    { id: "delivery-tracking", label: "Delivery Tracking", icon: Truck },
-    { id: "payments", label: "Payments", icon: CreditCard },
-    { id: "profile", label: "Profile Settings", icon: User },
+    { id: "add-product", label: "Add Product", icon: Plus },
+    { id: "rental-management", label: "Rental Management", icon: Package },
+    { id: "reviews", label: "Reviews", icon: Star },
+    { id: "chat", label: "Real-time Chat", icon: MessageSquare },
+    { id: "settings", label: "Settings", icon: Settings },
+    { id: "profile", label: "Profile", icon: User },
+  ];
+
+  // Mock search data
+  const mockProducts = [
+    { id: 1, title: "MacBook Pro 16-inch", category: "Electronics", status: "In Stock", image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400" },
+    { id: 2, title: "Canon EOS R Camera", category: "Electronics", status: "Rented", image: "https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=400" },
+    { id: 3, title: "Vintage Leather Jacket", category: "Clothing", status: "Out of Stock", image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400" },
+    { id: 4, title: "Wireless Gaming Mouse", category: "Electronics", status: "In Stock", image: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400" },
   ];
 
   const handleTabClick = (tabId: string) => {
     setActiveTab(tabId);
-    setIsSidebarOpen(false); // Close sidebar on mobile after selection
+    setIsSidebarOpen(false);
+  };
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    if (query.trim()) {
+      const filtered = mockProducts.filter(product =>
+        product.title.toLowerCase().includes(query.toLowerCase()) ||
+        product.category.toLowerCase().includes(query.toLowerCase())
+      );
+      setSearchResults(filtered);
+    } else {
+      setSearchResults([]);
+    }
+  };
+
+  const handleProductClick = (productId: number) => {
+    setActiveTab("my-products");
+    setSearchQuery("");
+    setSearchResults([]);
+    setIsSidebarOpen(false);
   };
 
   const renderActiveComponent = () => {
@@ -36,12 +67,13 @@ const Index = () => {
         return <AddProduct />;
       case "my-products":
         return <MyProducts />;
-      case "rental-products":
-        return <RentalProducts />;
-      case "delivery-tracking":
-        return <DeliveryTracking />;
-      case "payments":
-        return <Payments />;
+      case "rental-management":
+        return <RentalManagement />;
+      case "reviews":
+        return <Reviews />;
+      case "chat":
+        return <RealTimeChat />;
+      case "settings":
       case "profile":
         return <ProfileSettings />;
       default:
@@ -62,26 +94,106 @@ const Index = () => {
             >
               {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
-            <div className="text-xl font-bold text-gray-900">SellerHub</div>
+            <div className="text-xl font-bold text-black">Seller Dashboard</div>
           </div>
 
-          {/* Center: Desktop Navigation */}
-          <nav className="hidden md:flex items-center space-x-8">
-            <a href="#" className="text-gray-700 hover:text-gray-900 transition-colors">Home</a>
-            <a href="#" className="text-gray-700 hover:text-gray-900 transition-colors">Products</a>
-            <a href="#" className="text-gray-700 hover:text-gray-900 transition-colors">Contact Us</a>
-            <a href="#" className="text-gray-700 hover:text-gray-900 transition-colors">About Us</a>
-          </nav>
+          {/* Center: Search Bar */}
+          <div className="hidden md:flex flex-1 max-w-md mx-8 relative">
+            <div className="relative w-full">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+              <input
+                type="text"
+                placeholder="Search products by title or category..."
+                value={searchQuery}
+                onChange={(e) => handleSearch(e.target.value)}
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+              />
+              
+              {/* Search Results Dropdown */}
+              {searchResults.length > 0 && (
+                <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-lg mt-1 max-h-60 overflow-y-auto z-50">
+                  {searchResults.map((product) => (
+                    <div
+                      key={product.id}
+                      onClick={() => handleProductClick(product.id)}
+                      className="flex items-center space-x-3 p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+                    >
+                      <img
+                        src={product.image}
+                        alt={product.title}
+                        className="w-10 h-10 rounded-md object-cover"
+                      />
+                      <div className="flex-1">
+                        <div className="text-sm font-medium text-black">{product.title}</div>
+                        <div className="text-xs text-gray-500">{product.category}</div>
+                      </div>
+                      <span className={`px-2 py-1 text-xs rounded-full ${
+                        product.status === "In Stock" ? "bg-green-100 text-green-800" :
+                        product.status === "Rented" ? "bg-blue-100 text-blue-800" :
+                        "bg-red-100 text-red-800"
+                      }`}>
+                        {product.status}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
 
-          {/* Right: Notifications + Logout */}
+          {/* Right: Welcome + Logout */}
           <div className="flex items-center space-x-4">
-            <button className="relative p-2 text-gray-600 hover:bg-gray-100 rounded-full transition-colors">
-              <Bell size={20} />
-              <span className="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-5 w-5 flex items-center justify-center">3</span>
+            <div className="hidden md:block text-sm text-gray-600">
+              Welcome, <span className="font-medium text-black">Ali Traders</span>
+            </div>
+            <button className="flex items-center space-x-2 text-gray-700 hover:text-black transition-colors px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50">
+              <LogOut size={16} />
+              <span className="hidden sm:inline">Logout</span>
             </button>
-            <button className="text-gray-700 hover:text-gray-900 transition-colors px-4 py-2 border border-gray-300 rounded-md hover:bg-gray-50">
-              Logout
-            </button>
+          </div>
+        </div>
+
+        {/* Mobile Search Bar */}
+        <div className="md:hidden px-4 pb-3">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+            <input
+              type="text"
+              placeholder="Search products..."
+              value={searchQuery}
+              onChange={(e) => handleSearch(e.target.value)}
+              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+            />
+            
+            {/* Mobile Search Results */}
+            {searchResults.length > 0 && (
+              <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-lg mt-1 max-h-48 overflow-y-auto z-50">
+                {searchResults.map((product) => (
+                  <div
+                    key={product.id}
+                    onClick={() => handleProductClick(product.id)}
+                    className="flex items-center space-x-3 p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+                  >
+                    <img
+                      src={product.image}
+                      alt={product.title}
+                      className="w-8 h-8 rounded-md object-cover"
+                    />
+                    <div className="flex-1">
+                      <div className="text-sm font-medium text-black">{product.title}</div>
+                      <div className="text-xs text-gray-500">{product.category}</div>
+                    </div>
+                    <span className={`px-2 py-1 text-xs rounded-full ${
+                      product.status === "In Stock" ? "bg-green-100 text-green-800" :
+                      product.status === "Rented" ? "bg-blue-100 text-blue-800" :
+                      "bg-red-100 text-red-800"
+                    }`}>
+                      {product.status}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         </div>
       </header>
@@ -96,9 +208,9 @@ const Index = () => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed lg:static top-16 left-0 h-full bg-white border-r border-gray-200 z-40 w-64 transform transition-transform duration-300 ease-in-out ${
+        className={`fixed lg:static top-0 left-0 h-full bg-white border-r border-gray-200 z-40 w-64 transform transition-transform duration-300 ease-in-out ${
           isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0 lg:block`}
+        } lg:translate-x-0 lg:block pt-16 lg:pt-16`}
       >
         <div className="p-4 h-full overflow-y-auto">
           <nav className="space-y-2">
@@ -110,7 +222,7 @@ const Index = () => {
                   onClick={() => handleTabClick(item.id)}
                   className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
                     activeTab === item.id
-                      ? "bg-gray-900 text-white"
+                      ? "bg-black text-white"
                       : "text-gray-700 hover:bg-gray-100"
                   }`}
                 >
