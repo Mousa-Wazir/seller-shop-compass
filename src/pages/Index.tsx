@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Menu, X, Search, User, MessageSquare, Star, Package, Plus, Settings as SettingsIcon, LogOut } from "lucide-react";
 import Dashboard from "../components/Dashboard";
@@ -30,16 +29,16 @@ const Index = () => {
     { id: "settings", label: "Settings", icon: SettingsIcon },
   ];
 
-  // Updated categories as requested
+  // Updated products with category-specific names and images
   const mockProducts = [
-    { id: 1, title: "Vintage Table Lamp", category: "Home Decor", status: "In Stock", image: "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400" },
-    { id: 2, title: "Modern Dining Table", category: "Furniture", status: "Rented", image: "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400" },
-    { id: 3, title: "Designer Handbag", category: "Clothing Accessories", status: "Out of Stock", image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400" },
-    { id: 4, title: "Skincare Set", category: "Health and Beauty", status: "In Stock", image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400" },
-    { id: 5, title: "Handmade Pottery", category: "Handicrafts", status: "In Stock", image: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=400" },
-    { id: 6, title: "Decorative Wall Art", category: "Home Decor", status: "Available", image: "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400" },
-    { id: 7, title: "Leather Sofa", category: "Furniture", status: "In Stock", image: "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400" },
-    { id: 8, title: "Handwoven Basket", category: "Handicrafts", status: "Available", image: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=400" },
+    { id: 1, title: "Vintage Ceramic Table Lamp", category: "Home Decor", status: "In Stock", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400" },
+    { id: 2, title: "Modern Oak Dining Table", category: "Furniture", status: "Rented", image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400" },
+    { id: 3, title: "Designer Leather Handbag", category: "Clothing Accessories", status: "Out of Stock", image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400" },
+    { id: 4, title: "Organic Skincare Set", category: "Health and Beauty", status: "In Stock", image: "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=400" },
+    { id: 5, title: "Handmade Ceramic Pottery", category: "Handicrafts", status: "In Stock", image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400" },
+    { id: 6, title: "Decorative Wall Mirror", category: "Home Decor", status: "Available", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400" },
+    { id: 7, title: "Leather Sofa Set", category: "Furniture", status: "In Stock", image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400" },
+    { id: 8, title: "Handwoven Basket Collection", category: "Handicrafts", status: "Available", image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400" },
   ];
 
   const handleTabClick = (tabId: string) => {

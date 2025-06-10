@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Edit, Eye, MoreVertical, Package } from "lucide-react";
 
@@ -6,58 +5,58 @@ const MyProducts = () => {
   const [products] = useState([
     {
       id: 1,
-      name: "MacBook Pro 16-inch",
-      category: "Electronics",
-      price: 2499,
-      rentPrice: 50,
+      name: "Vintage Ceramic Table Lamp",
+      category: "Home Decor",
+      price: 89,
+      rentPrice: 8,
       quantity: 2,
       status: "Active",
       rentAvailable: true,
-      image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400"
+      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400"
     },
     {
       id: 2,
-      name: "Canon EOS R Camera",
-      category: "Electronics",
-      price: 1800,
-      rentPrice: 35,
+      name: "Modern Oak Dining Table",
+      category: "Furniture",
+      price: 450,
+      rentPrice: 25,
       quantity: 1,
       status: "Rented",
       rentAvailable: true,
-      image: "https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=400"
+      image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400"
     },
     {
       id: 3,
-      name: "Vintage Leather Jacket",
-      category: "Clothing",
+      name: "Designer Leather Handbag",
+      category: "Clothing Accessories",
       price: 150,
       rentPrice: 0,
       quantity: 0,
       status: "Out of Stock",
       rentAvailable: false,
-      image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400"
+      image: "https://images.unsplash.com/photo-1584917865442-de89df76afd3?w=400"
     },
     {
       id: 4,
-      name: "Wireless Gaming Mouse",
-      category: "Electronics",
-      price: 89,
+      name: "Organic Skincare Set",
+      category: "Health and Beauty",
+      price: 75,
       rentPrice: 5,
       quantity: 15,
       status: "Active",
       rentAvailable: true,
-      image: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400"
+      image: "https://images.unsplash.com/photo-1556228578-8c89e6adf883?w=400"
     },
     {
       id: 5,
-      name: "Professional Tripod",
-      category: "Electronics",
+      name: "Handmade Ceramic Pottery",
+      category: "Handicrafts",
       price: 120,
       rentPrice: 8,
       quantity: 3,
       status: "Active",
       rentAvailable: true,
-      image: "https://images.unsplash.com/photo-1606918801925-e2c914c4b503?w=400"
+      image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400"
     }
   ]);
 

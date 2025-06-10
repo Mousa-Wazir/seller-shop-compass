@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { User, Camera, Save, Eye, EyeOff } from "lucide-react";
+import { User, Camera, Save, Trash2 } from "lucide-react";
 
 const ProfileSettings = () => {
   const [profile, setProfile] = useState({
@@ -17,33 +17,10 @@ const ProfileSettings = () => {
     gender: "male"
   });
 
-  const [passwords, setPasswords] = useState({
-    currentPassword: "",
-    newPassword: "",
-    confirmPassword: ""
-  });
-
-  const [showPasswords, setShowPasswords] = useState({
-    current: false,
-    new: false,
-    confirm: false
-  });
-
   const handleProfileSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Profile updated:", profile);
     alert("Profile updated successfully!");
-  };
-
-  const handlePasswordSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (passwords.newPassword !== passwords.confirmPassword) {
-      alert("New passwords don't match!");
-      return;
-    }
-    console.log("Password changed");
-    alert("Password changed successfully!");
-    setPasswords({ currentPassword: "", newPassword: "", confirmPassword: "" });
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -54,11 +31,18 @@ const ProfileSettings = () => {
     }
   };
 
+  const handleDeleteAccount = () => {
+    if (confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+      console.log("Account deletion requested");
+      alert("Account deletion request submitted. You will receive a confirmation email.");
+    }
+  };
+
   return (
     <div className="max-w-4xl mx-auto space-y-8">
       <div>
         <h1 className="text-3xl font-bold text-gray-900 mb-2">Profile Settings</h1>
-        <p className="text-gray-600">Manage your personal information and account preferences.</p>
+        <p className="text-gray-600">Manage your personal information and store preferences.</p>
       </div>
 
       {/* Profile Information */}
@@ -212,95 +196,23 @@ const ProfileSettings = () => {
         </form>
       </div>
 
-      {/* Password Change */}
+      {/* Account Management */}
       <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">Change Password</h2>
+        <h2 className="text-xl font-semibold text-gray-900 mb-6">Account Management</h2>
         
-        <form onSubmit={handlePasswordSubmit} className="space-y-6">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Current Password */}
-            <div className="md:col-span-2">
-              <label className="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
-              <div className="relative">
-                <input
-                  type={showPasswords.current ? "text" : "password"}
-                  value={passwords.currentPassword}
-                  onChange={(e) => setPasswords(prev => ({ ...prev, currentPassword: e.target.value }))}
-                  className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPasswords(prev => ({ ...prev, current: !prev.current }))}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                >
-                  {showPasswords.current ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
-              </div>
-            </div>
-
-            {/* New Password */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">New Password</label>
-              <div className="relative">
-                <input
-                  type={showPasswords.new ? "text" : "password"}
-                  value={passwords.newPassword}
-                  onChange={(e) => setPasswords(prev => ({ ...prev, newPassword: e.target.value }))}
-                  className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPasswords(prev => ({ ...prev, new: !prev.new }))}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                >
-                  {showPasswords.new ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
-              </div>
-            </div>
-
-            {/* Confirm Password */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Confirm New Password</label>
-              <div className="relative">
-                <input
-                  type={showPasswords.confirm ? "text" : "password"}
-                  value={passwords.confirmPassword}
-                  onChange={(e) => setPasswords(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                  className="w-full px-3 py-2 pr-10 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
-                  required
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPasswords(prev => ({ ...prev, confirm: !prev.confirm }))}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                >
-                  {showPasswords.confirm ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-gray-50 p-4 rounded-md">
-            <h4 className="text-sm font-medium text-gray-900 mb-2">Password Requirements:</h4>
-            <ul className="text-sm text-gray-600 space-y-1">
-              <li>• At least 8 characters long</li>
-              <li>• Include uppercase and lowercase letters</li>
-              <li>• Include at least one number</li>
-              <li>• Include at least one special character</li>
-            </ul>
-          </div>
-
-          <div className="flex justify-end">
-            <button
-              type="submit"
-              className="px-6 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors"
-            >
-              Change Password
-            </button>
-          </div>
-        </form>
+        <div className="bg-red-50 border border-red-200 rounded-lg p-6">
+          <h3 className="text-lg font-medium text-red-900 mb-2">Delete Account</h3>
+          <p className="text-sm text-red-700 mb-4">
+            Once you delete your account, there is no going back. This will permanently delete your profile, store, and all associated data.
+          </p>
+          <button
+            onClick={handleDeleteAccount}
+            className="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors flex items-center space-x-2"
+          >
+            <Trash2 size={18} />
+            <span>Delete Account</span>
+          </button>
+        </div>
       </div>
     </div>
   );

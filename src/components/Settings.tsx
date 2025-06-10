@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Bell, Globe, Shield, Eye, EyeOff, Save, Moon, Sun } from "lucide-react";
+import { Bell, Globe, Shield, Eye, EyeOff, Save, Moon, Sun, Trash2, Store } from "lucide-react";
 
 const Settings = () => {
   const [settings, setSettings] = useState({
@@ -67,6 +67,13 @@ const Settings = () => {
     setCurrentPassword("");
     setNewPassword("");
     setConfirmPassword("");
+  };
+
+  const handleDeleteStore = () => {
+    if (confirm("Are you sure you want to delete your store? This will remove all your products, reviews, and rental history. This action cannot be undone.")) {
+      console.log("Store deletion requested");
+      alert("Store deletion request submitted. You will receive a confirmation email.");
+    }
   };
 
   return (
@@ -252,9 +259,38 @@ const Settings = () => {
 
       {/* Security Settings */}
       <div className="bg-white rounded-lg border border-gray-200 p-6">
-        <h2 className="text-xl font-semibold text-gray-900 mb-6">Security Settings</h2>
+        <div className="flex items-center space-x-3 mb-6">
+          <Shield className="h-6 w-6 text-gray-900" />
+          <h2 className="text-xl font-semibold text-gray-900">Security Settings</h2>
+        </div>
         
+        <div className="space-y-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="flex items-center justify-between">
+              <label className="text-sm text-gray-700">Two-Factor Authentication</label>
+              <input
+                type="checkbox"
+                checked={settings.twoFactorAuth}
+                onChange={(e) => handleSettingChange("twoFactorAuth", e.target.checked)}
+                className="h-4 w-4 text-black focus:ring-black border-gray-300 rounded"
+              />
+            </div>
+            
+            <div className="flex items-center justify-between">
+              <label className="text-sm text-gray-700">Login Alerts</label>
+              <input
+                type="checkbox"
+                checked={settings.loginAlerts}
+                onChange={(e) => handleSettingChange("loginAlerts", e.target.checked)}
+                className="h-4 w-4 text-black focus:ring-black border-gray-300 rounded"
+              />
+            </div>
+          </div>
+        </div>
+
         <form onSubmit={handlePasswordChange} className="space-y-6">
+          <h3 className="text-lg font-semibold text-gray-900">Change Password</h3>
+          
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div className="md:col-span-2">
               <label className="block text-sm font-medium text-gray-700 mb-2">Current Password</label>
@@ -317,6 +353,16 @@ const Settings = () => {
             </div>
           </div>
 
+          <div className="bg-gray-50 p-4 rounded-md">
+            <h4 className="text-sm font-medium text-gray-900 mb-2">Password Requirements:</h4>
+            <ul className="text-sm text-gray-600 space-y-1">
+              <li>• At least 8 characters long</li>
+              <li>• Include uppercase and lowercase letters</li>
+              <li>• Include at least one number</li>
+              <li>• Include at least one special character</li>
+            </ul>
+          </div>
+
           <div className="flex justify-end">
             <button
               type="submit"
@@ -326,6 +372,28 @@ const Settings = () => {
             </button>
           </div>
         </form>
+      </div>
+
+      {/* Store Management */}
+      <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <div className="flex items-center space-x-3 mb-6">
+          <Store className="h-6 w-6 text-gray-900" />
+          <h2 className="text-xl font-semibold text-gray-900">Store Management</h2>
+        </div>
+        
+        <div className="bg-red-50 border border-red-200 rounded-lg p-6">
+          <h3 className="text-lg font-medium text-red-900 mb-2">Delete Store</h3>
+          <p className="text-sm text-red-700 mb-4">
+            Once you delete your store, there is no going back. This will permanently delete all your products, rental history, reviews, and customer data.
+          </p>
+          <button
+            onClick={handleDeleteStore}
+            className="px-6 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-colors flex items-center space-x-2"
+          >
+            <Trash2 size={18} />
+            <span>Delete Store</span>
+          </button>
+        </div>
       </div>
 
       {/* Save Settings */}
