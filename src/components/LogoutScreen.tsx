@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { LogIn, Mail, Lock, Eye, EyeOff, User, Store } from "lucide-react";
 
-const LogoutScreen = () => {
+const LogoutScreen = ({ onSignUpClick }: { onSignUpClick: () => void }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [accountType, setAccountType] = useState("seller");
   const [loginMethod, setLoginMethod] = useState("email");
@@ -238,9 +238,12 @@ const LogoutScreen = () => {
         <div className="text-center">
           <p className="text-sm text-gray-600">
             Don't have an account?{" "}
-            <a href="#" className="font-medium text-black hover:text-gray-800">
+            <button 
+              onClick={onSignUpClick}
+              className="font-medium text-black hover:text-gray-800"
+            >
               Sign up here
-            </a>
+            </button>
           </p>
         </div>
       </div>

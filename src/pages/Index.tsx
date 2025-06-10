@@ -1,6 +1,6 @@
 
 import { useState } from "react";
-import { Menu, X, Search, User, MessageSquare, Star, Package, Plus, Settings, LogOut } from "lucide-react";
+import { Menu, X, Search, User, MessageSquare, Star, Package, Plus, Settings as SettingsIcon, LogOut } from "lucide-react";
 import Dashboard from "../components/Dashboard";
 import AddProduct from "../components/AddProduct";
 import MyProducts from "../components/MyProducts";
@@ -8,13 +8,16 @@ import RentalManagement from "../components/RentalManagement";
 import Reviews from "../components/Reviews";
 import RealTimeChat from "../components/RealTimeChat";
 import ProfileSettings from "../components/ProfileSettings";
+import Settings from "../components/Settings";
 import LogoutScreen from "../components/LogoutScreen";
+import SignUp from "../components/SignUp";
 
 const Index = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("dashboard");
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
+  const [showSignUp, setShowSignUp] = useState(false);
 
   const navigationItems = [
     { id: "profile", label: "Profile", icon: User },
@@ -24,19 +27,19 @@ const Index = () => {
     { id: "rental-management", label: "Rental Management", icon: Package },
     { id: "reviews", label: "Reviews", icon: Star },
     { id: "chat", label: "Real-time Chat", icon: MessageSquare },
-    { id: "settings", label: "Settings", icon: Settings },
+    { id: "settings", label: "Settings", icon: SettingsIcon },
   ];
 
-  // Category-specific mock products with proper images
+  // Updated categories as requested
   const mockProducts = [
-    { id: 1, title: "MacBook Pro 16-inch", category: "Electronics", status: "In Stock", image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400" },
-    { id: 2, title: "Canon EOS R Camera", category: "Electronics", status: "Rented", image: "https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=400" },
-    { id: 3, title: "Vintage Leather Jacket", category: "Clothing", status: "Out of Stock", image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400" },
-    { id: 4, title: "Wireless Gaming Mouse", category: "Electronics", status: "In Stock", image: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400" },
-    { id: 5, title: "Fresh Vegetables Bundle", category: "Food & Grocery", status: "In Stock", image: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=400" },
-    { id: 6, title: "Modern Apartment", category: "Real Estate", status: "Available", image: "https://images.unsplash.com/photo-1488972685288-c3fd157d7c7a?w=400" },
-    { id: 7, title: "Pet Food & Supplies", category: "Pet Supplies", status: "In Stock", image: "https://images.unsplash.com/photo-1582562124811-c09040d0a901?w=400" },
-    { id: 8, title: "Farm Equipment", category: "Agriculture", status: "Available", image: "https://images.unsplash.com/photo-1452378174528-3090a4bba7b2?w=400" },
+    { id: 1, title: "Vintage Table Lamp", category: "Home Decor", status: "In Stock", image: "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400" },
+    { id: 2, title: "Modern Dining Table", category: "Furniture", status: "Rented", image: "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400" },
+    { id: 3, title: "Designer Handbag", category: "Clothing Accessories", status: "Out of Stock", image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400" },
+    { id: 4, title: "Skincare Set", category: "Health and Beauty", status: "In Stock", image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400" },
+    { id: 5, title: "Handmade Pottery", category: "Handicrafts", status: "In Stock", image: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=400" },
+    { id: 6, title: "Decorative Wall Art", category: "Home Decor", status: "Available", image: "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400" },
+    { id: 7, title: "Leather Sofa", category: "Furniture", status: "In Stock", image: "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400" },
+    { id: 8, title: "Handwoven Basket", category: "Handicrafts", status: "Available", image: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=400" },
   ];
 
   const handleTabClick = (tabId: string) => {
@@ -69,6 +72,16 @@ const Index = () => {
     setIsSidebarOpen(false);
   };
 
+  const handleSignUpSuccess = () => {
+    setShowSignUp(false);
+    setActiveTab("dashboard");
+  };
+
+  // Show sign up screen if requested
+  if (showSignUp) {
+    return <SignUp onSignUpSuccess={handleSignUpSuccess} />;
+  }
+
   const renderActiveComponent = () => {
     switch (activeTab) {
       case "dashboard":
@@ -83,11 +96,12 @@ const Index = () => {
         return <Reviews />;
       case "chat":
         return <RealTimeChat />;
-      case "settings":
       case "profile":
         return <ProfileSettings />;
+      case "settings":
+        return <Settings />;
       case "logout":
-        return <LogoutScreen />;
+        return <LogoutScreen onSignUpClick={() => setShowSignUp(true)} />;
       default:
         return <Dashboard />;
     }

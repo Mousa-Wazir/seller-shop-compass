@@ -10,7 +10,11 @@ const ProfileSettings = () => {
     phone: "+1 (555) 123-4567",
     address: "123 Main St, New York, NY 10001",
     bio: "Experienced electronics seller with over 5 years in the marketplace. Specializing in laptops, cameras, and tech accessories.",
-    profileImage: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400"
+    profileImage: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400",
+    firstName: "John",
+    lastName: "Seller",
+    dateOfBirth: "1990-01-15",
+    gender: "male"
   });
 
   const [passwords, setPasswords] = useState({
@@ -87,13 +91,25 @@ const ProfileSettings = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Full Name */}
+            {/* First Name */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
+              <label className="block text-sm font-medium text-gray-700 mb-2">First Name</label>
               <input
                 type="text"
-                value={profile.name}
-                onChange={(e) => setProfile(prev => ({ ...prev, name: e.target.value }))}
+                value={profile.firstName}
+                onChange={(e) => setProfile(prev => ({ ...prev, firstName: e.target.value, name: `${e.target.value} ${prev.lastName}` }))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+                required
+              />
+            </div>
+
+            {/* Last Name */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Last Name</label>
+              <input
+                type="text"
+                value={profile.lastName}
+                onChange={(e) => setProfile(prev => ({ ...prev, lastName: e.target.value, name: `${prev.firstName} ${e.target.value}` }))}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
                 required
               />
@@ -111,18 +127,6 @@ const ProfileSettings = () => {
               />
             </div>
 
-            {/* Store Name */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">Store Name</label>
-              <input
-                type="text"
-                value={profile.storeName}
-                onChange={(e) => setProfile(prev => ({ ...prev, storeName: e.target.value }))}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
-                required
-              />
-            </div>
-
             {/* Phone */}
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Phone Number</label>
@@ -131,6 +135,44 @@ const ProfileSettings = () => {
                 value={profile.phone}
                 onChange={(e) => setProfile(prev => ({ ...prev, phone: e.target.value }))}
                 className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+              />
+            </div>
+
+            {/* Date of Birth */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Date of Birth</label>
+              <input
+                type="date"
+                value={profile.dateOfBirth}
+                onChange={(e) => setProfile(prev => ({ ...prev, dateOfBirth: e.target.value }))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+              />
+            </div>
+
+            {/* Gender */}
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-2">Gender</label>
+              <select
+                value={profile.gender}
+                onChange={(e) => setProfile(prev => ({ ...prev, gender: e.target.value }))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+              >
+                <option value="">Select Gender</option>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+
+            {/* Store Name */}
+            <div className="md:col-span-2">
+              <label className="block text-sm font-medium text-gray-700 mb-2">Store Name</label>
+              <input
+                type="text"
+                value={profile.storeName}
+                onChange={(e) => setProfile(prev => ({ ...prev, storeName: e.target.value }))}
+                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+                required
               />
             </div>
           </div>

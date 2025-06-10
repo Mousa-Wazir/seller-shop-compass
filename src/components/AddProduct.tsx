@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Upload, X, Plus, Eye } from "lucide-react";
 
@@ -18,30 +17,22 @@ const AddProduct = () => {
   const [images, setImages] = useState<string[]>([]);
   const [showPreview, setShowPreview] = useState(false);
 
+  // Updated categories as requested
   const categories = [
-    "Electronics",
-    "Clothing",
-    "Food & Grocery", 
-    "Real Estate",
-    "Pet Supplies",
-    "Agriculture",
-    "Home & Garden",
-    "Sports & Recreation",
-    "Books & Media",
-    "Vehicles"
+    "Home Decor",
+    "Furniture", 
+    "Clothing Accessories",
+    "Health and Beauty",
+    "Handicrafts"
   ];
 
+  // Updated category images to match the new categories
   const categoryImages = {
-    "Electronics": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400",
-    "Clothing": "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400",
-    "Food & Grocery": "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=400",
-    "Real Estate": "https://images.unsplash.com/photo-1488972685288-c3fd157d7c7a?w=400",
-    "Pet Supplies": "https://images.unsplash.com/photo-1582562124811-c09040d0a901?w=400",
-    "Agriculture": "https://images.unsplash.com/photo-1452378174528-3090a4bba7b2?w=400",
-    "Home & Garden": "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400",
-    "Sports & Recreation": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400",
-    "Books & Media": "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400",
-    "Vehicles": "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=400"
+    "Home Decor": "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400",
+    "Furniture": "https://images.unsplash.com/photo-1721322800607-8c38375eef04?w=400",
+    "Clothing Accessories": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400",
+    "Health and Beauty": "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=400",
+    "Handicrafts": "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=400"
   };
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
@@ -67,7 +58,6 @@ const AddProduct = () => {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     console.log("Product submitted:", { ...formData, images });
-    // Here you would handle the actual product submission
   };
 
   return (
