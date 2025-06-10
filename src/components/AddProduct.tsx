@@ -1,218 +1,352 @@
 
 import { useState } from "react";
-import { Upload, Image as ImageIcon, Save, X } from "lucide-react";
+import { Upload, X, Plus, Eye } from "lucide-react";
 
 const AddProduct = () => {
-  const [product, setProduct] = useState({
-    name: "",
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
     category: "",
     price: "",
-    rentPrice: "",
-    description: "",
     quantity: "",
-    availableForRent: false,
-    images: [] as string[]
+    dailyRentalPrice: "",
+    minDays: "",
+    maxDays: "",
+    isRentalAvailable: false
   });
+
+  const [images, setImages] = useState<string[]>([]);
+  const [showPreview, setShowPreview] = useState(false);
 
   const categories = [
     "Electronics",
     "Clothing",
+    "Food & Grocery", 
+    "Real Estate",
+    "Pet Supplies",
+    "Agriculture",
     "Home & Garden",
-    "Sports & Outdoors",
-    "Automotive",
-    "Books",
-    "Toys & Games",
-    "Other"
+    "Sports & Recreation",
+    "Books & Media",
+    "Vehicles"
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log("Product saved:", product);
-    // Here you would typically send the data to your backend
-    alert("Product saved successfully!");
+  const categoryImages = {
+    "Electronics": "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400",
+    "Clothing": "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400",
+    "Food & Grocery": "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=400",
+    "Real Estate": "https://images.unsplash.com/photo-1488972685288-c3fd157d7c7a?w=400",
+    "Pet Supplies": "https://images.unsplash.com/photo-1582562124811-c09040d0a901?w=400",
+    "Agriculture": "https://images.unsplash.com/photo-1452378174528-3090a4bba7b2?w=400",
+    "Home & Garden": "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=400",
+    "Sports & Recreation": "https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=400",
+    "Books & Media": "https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400",
+    "Vehicles": "https://images.unsplash.com/photo-1449965408869-eaa3f722e40d?w=400"
+  };
+
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value, type } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: type === "checkbox" ? (e.target as HTMLInputElement).checked : value
+    }));
   };
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (files) {
-      // In a real app, you'd upload these files and get URLs back
-      const newImages = Array.from(files).map(file => URL.createObjectURL(file));
-      setProduct(prev => ({
-        ...prev,
-        images: [...prev.images, ...newImages].slice(0, 5) // Limit to 5 images
-      }));
+      const newImages = Array.from(files).slice(0, 10 - images.length).map(file => URL.createObjectURL(file));
+      setImages(prev => [...prev, ...newImages]);
     }
   };
 
   const removeImage = (index: number) => {
-    setProduct(prev => ({
-      ...prev,
-      images: prev.images.filter((_, i) => i !== index)
-    }));
+    setImages(prev => prev.filter((_, i) => i !== index));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    console.log("Product submitted:", { ...formData, images });
+    // Here you would handle the actual product submission
   };
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold text-gray-900 mb-2">Add / Update Product</h1>
-        <p className="text-gray-600">Create or modify your product listings for the marketplace.</p>
+        <h1 className="text-3xl font-bold text-black mb-2">Add New Product</h1>
+        <p className="text-gray-600">Fill in the details below to add a new product to your store.</p>
       </div>
 
-      <form onSubmit={handleSubmit} className="bg-white rounded-lg border border-gray-200 p-6 space-y-6">
-        {/* Product Images */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-3">Product Images</label>
-          <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-4">
-            {product.images.map((image, index) => (
-              <div key={index} className="relative">
-                <img
-                  src={image}
-                  alt={`Product ${index + 1}`}
-                  className="w-full h-24 object-cover rounded-lg border border-gray-200"
-                />
-                <button
-                  type="button"
-                  onClick={() => removeImage(index)}
-                  className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600 transition-colors"
-                >
-                  <X size={14} />
-                </button>
-              </div>
-            ))}
-            {product.images.length < 5 && (
-              <label className="border-2 border-dashed border-gray-300 rounded-lg p-4 h-24 flex flex-col items-center justify-center cursor-pointer hover:border-gray-400 transition-colors">
-                <Upload className="text-gray-400 mb-1" size={20} />
-                <span className="text-xs text-gray-500">Upload</span>
-                <input
-                  type="file"
-                  accept="image/*"
-                  multiple
-                  onChange={handleImageUpload}
-                  className="hidden"
-                />
+      <div className="bg-white rounded-lg border border-gray-200 p-6">
+        <form onSubmit={handleSubmit} className="space-y-6">
+          {/* Basic Information */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div>
+              <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
+                Product Title *
               </label>
+              <input
+                type="text"
+                id="title"
+                name="title"
+                value={formData.title}
+                onChange={handleInputChange}
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+                placeholder="Enter product title"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-2">
+                Category *
+              </label>
+              <select
+                id="category"
+                name="category"
+                value={formData.category}
+                onChange={handleInputChange}
+                required
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+              >
+                <option value="">Select a category</option>
+                {categories.map(category => (
+                  <option key={category} value={category}>{category}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          {/* Description */}
+          <div>
+            <label htmlFor="description" className="block text-sm font-medium text-gray-700 mb-2">
+              Description *
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              value={formData.description}
+              onChange={handleInputChange}
+              required
+              rows={4}
+              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+              placeholder="Describe your product in detail"
+            />
+          </div>
+
+          {/* Pricing and Quantity */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div>
+              <label htmlFor="price" className="block text-sm font-medium text-gray-700 mb-2">
+                Sale Price ($) *
+              </label>
+              <input
+                type="number"
+                id="price"
+                name="price"
+                value={formData.price}
+                onChange={handleInputChange}
+                required
+                min="0"
+                step="0.01"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+                placeholder="0.00"
+              />
+            </div>
+
+            <div>
+              <label htmlFor="quantity" className="block text-sm font-medium text-gray-700 mb-2">
+                Quantity Available *
+              </label>
+              <input
+                type="number"
+                id="quantity"
+                name="quantity"
+                value={formData.quantity}
+                onChange={handleInputChange}
+                required
+                min="1"
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+                placeholder="1"
+              />
+            </div>
+
+            <div className="flex items-end">
+              <label className="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  name="isRentalAvailable"
+                  checked={formData.isRentalAvailable}
+                  onChange={handleInputChange}
+                  className="h-4 w-4 text-black focus:ring-black border-gray-300 rounded"
+                />
+                <span className="text-sm font-medium text-gray-700">Available for Rent</span>
+              </label>
+            </div>
+          </div>
+
+          {/* Rental Options */}
+          {formData.isRentalAvailable && (
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <h3 className="text-lg font-medium text-black mb-4">Rental Options</h3>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label htmlFor="dailyRentalPrice" className="block text-sm font-medium text-gray-700 mb-2">
+                    Daily Rental Price ($)
+                  </label>
+                  <input
+                    type="number"
+                    id="dailyRentalPrice"
+                    name="dailyRentalPrice"
+                    value={formData.dailyRentalPrice}
+                    onChange={handleInputChange}
+                    min="0"
+                    step="0.01"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+                    placeholder="0.00"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="minDays" className="block text-sm font-medium text-gray-700 mb-2">
+                    Minimum Days
+                  </label>
+                  <input
+                    type="number"
+                    id="minDays"
+                    name="minDays"
+                    value={formData.minDays}
+                    onChange={handleInputChange}
+                    min="1"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+                    placeholder="1"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="maxDays" className="block text-sm font-medium text-gray-700 mb-2">
+                    Maximum Days
+                  </label>
+                  <input
+                    type="number"
+                    id="maxDays"
+                    name="maxDays"
+                    value={formData.maxDays}
+                    onChange={handleInputChange}
+                    min="1"
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+                    placeholder="30"
+                  />
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* Image Upload */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-2">
+              Product Images (Max 10)
+            </label>
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6">
+              <div className="text-center">
+                <Upload className="mx-auto h-12 w-12 text-gray-400" />
+                <div className="mt-4">
+                  <label htmlFor="images" className="cursor-pointer">
+                    <span className="mt-2 block text-sm font-medium text-gray-900">
+                      Click to upload or drag and drop
+                    </span>
+                    <span className="mt-1 block text-xs text-gray-500">
+                      PNG, JPG, GIF up to 10MB
+                    </span>
+                  </label>
+                  <input
+                    id="images"
+                    name="images"
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={handleImageUpload}
+                    className="hidden"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* Image Preview */}
+            {images.length > 0 && (
+              <div className="mt-4 grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+                {images.map((image, index) => (
+                  <div key={index} className="relative">
+                    <img
+                      src={image}
+                      alt={`Preview ${index + 1}`}
+                      className="h-24 w-full object-cover rounded-lg"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => removeImage(index)}
+                      className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full p-1 hover:bg-red-600"
+                    >
+                      <X size={16} />
+                    </button>
+                  </div>
+                ))}
+              </div>
             )}
           </div>
-          <p className="text-sm text-gray-500">Upload up to 5 images. First image will be the main product image.</p>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Product Name */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Product Name</label>
-            <input
-              type="text"
-              value={product.name}
-              onChange={(e) => setProduct(prev => ({ ...prev, name: e.target.value }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
-              placeholder="Enter product name"
-              required
-            />
-          </div>
-
-          {/* Category */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Category</label>
-            <select
-              value={product.category}
-              onChange={(e) => setProduct(prev => ({ ...prev, category: e.target.value }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
-              required
+          {/* Action Buttons */}
+          <div className="flex flex-col sm:flex-row gap-4 pt-6 border-t border-gray-200">
+            <button
+              type="button"
+              onClick={() => setShowPreview(!showPreview)}
+              className="flex items-center justify-center px-6 py-3 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
             >
-              <option value="">Select a category</option>
-              {categories.map(category => (
-                <option key={category} value={category}>{category}</option>
-              ))}
-            </select>
+              <Eye size={20} className="mr-2" />
+              {showPreview ? "Hide Preview" : "Show Preview"}
+            </button>
+            
+            <button
+              type="submit"
+              className="flex items-center justify-center px-6 py-3 bg-black text-white rounded-lg hover:bg-gray-800 transition-colors"
+            >
+              <Plus size={20} className="mr-2" />
+              Add Product
+            </button>
           </div>
+        </form>
 
-          {/* Sale Price */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Sale Price ($)</label>
-            <input
-              type="number"
-              value={product.price}
-              onChange={(e) => setProduct(prev => ({ ...prev, price: e.target.value }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
-              placeholder="0.00"
-              min="0"
-              step="0.01"
-              required
-            />
+        {/* Product Preview */}
+        {showPreview && (
+          <div className="mt-8 p-6 bg-gray-50 rounded-lg">
+            <h3 className="text-lg font-medium text-black mb-4">Product Preview</h3>
+            <div className="bg-white rounded-lg border border-gray-200 p-4">
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="flex-shrink-0">
+                  <img
+                    src={images[0] || (formData.category ? categoryImages[formData.category as keyof typeof categoryImages] : "https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=400")}
+                    alt={formData.title || "Product"}
+                    className="h-32 w-32 object-cover rounded-lg"
+                  />
+                </div>
+                <div className="flex-1">
+                  <h4 className="text-lg font-medium text-black">{formData.title || "Product Title"}</h4>
+                  <p className="text-sm text-gray-500">{formData.category || "Category"}</p>
+                  <p className="text-gray-700 mt-2">{formData.description || "Product description will appear here..."}</p>
+                  <div className="flex items-center space-x-4 mt-3">
+                    <span className="text-xl font-bold text-black">${formData.price || "0.00"}</span>
+                    {formData.isRentalAvailable && formData.dailyRentalPrice && (
+                      <span className="text-sm text-gray-600">
+                        Rent: ${formData.dailyRentalPrice}/day
+                      </span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-
-          {/* Rent Price */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Rent Price ($/day)</label>
-            <input
-              type="number"
-              value={product.rentPrice}
-              onChange={(e) => setProduct(prev => ({ ...prev, rentPrice: e.target.value }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
-              placeholder="0.00"
-              min="0"
-              step="0.01"
-            />
-          </div>
-
-          {/* Quantity */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">Quantity Available</label>
-            <input
-              type="number"
-              value={product.quantity}
-              onChange={(e) => setProduct(prev => ({ ...prev, quantity: e.target.value }))}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
-              placeholder="0"
-              min="0"
-              required
-            />
-          </div>
-
-          {/* Available for Rent Toggle */}
-          <div className="flex items-center">
-            <label className="flex items-center space-x-3 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={product.availableForRent}
-                onChange={(e) => setProduct(prev => ({ ...prev, availableForRent: e.target.checked }))}
-                className="w-5 h-5 text-gray-600 border-gray-300 rounded focus:ring-gray-500"
-              />
-              <span className="text-sm font-medium text-gray-700">Available for Rent</span>
-            </label>
-          </div>
-        </div>
-
-        {/* Description */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-2">Product Description</label>
-          <textarea
-            value={product.description}
-            onChange={(e) => setProduct(prev => ({ ...prev, description: e.target.value }))}
-            rows={4}
-            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
-            placeholder="Describe your product features, condition, and any important details..."
-            required
-          />
-        </div>
-
-        {/* Submit Button */}
-        <div className="flex justify-end space-x-4">
-          <button
-            type="button"
-            className="px-6 py-2 border border-gray-300 text-gray-700 rounded-md hover:bg-gray-50 transition-colors"
-          >
-            Cancel
-          </button>
-          <button
-            type="submit"
-            className="px-6 py-2 bg-gray-900 text-white rounded-md hover:bg-gray-800 transition-colors flex items-center space-x-2"
-          >
-            <Save size={18} />
-            <span>Save Product</span>
-          </button>
-        </div>
-      </form>
+        )}
+      </div>
     </div>
   );
 };

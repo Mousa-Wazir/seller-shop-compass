@@ -8,6 +8,7 @@ import RentalManagement from "../components/RentalManagement";
 import Reviews from "../components/Reviews";
 import RealTimeChat from "../components/RealTimeChat";
 import ProfileSettings from "../components/ProfileSettings";
+import LogoutScreen from "../components/LogoutScreen";
 
 const Index = () => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
@@ -16,6 +17,7 @@ const Index = () => {
   const [searchResults, setSearchResults] = useState([]);
 
   const navigationItems = [
+    { id: "profile", label: "Profile", icon: User },
     { id: "dashboard", label: "Dashboard Overview", icon: Package },
     { id: "my-products", label: "My Products", icon: Package },
     { id: "add-product", label: "Add Product", icon: Plus },
@@ -23,19 +25,27 @@ const Index = () => {
     { id: "reviews", label: "Reviews", icon: Star },
     { id: "chat", label: "Real-time Chat", icon: MessageSquare },
     { id: "settings", label: "Settings", icon: Settings },
-    { id: "profile", label: "Profile", icon: User },
   ];
 
-  // Mock search data
+  // Category-specific mock products with proper images
   const mockProducts = [
     { id: 1, title: "MacBook Pro 16-inch", category: "Electronics", status: "In Stock", image: "https://images.unsplash.com/photo-1517336714731-489689fd1ca8?w=400" },
     { id: 2, title: "Canon EOS R Camera", category: "Electronics", status: "Rented", image: "https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=400" },
     { id: 3, title: "Vintage Leather Jacket", category: "Clothing", status: "Out of Stock", image: "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=400" },
     { id: 4, title: "Wireless Gaming Mouse", category: "Electronics", status: "In Stock", image: "https://images.unsplash.com/photo-1527864550417-7fd91fc51a46?w=400" },
+    { id: 5, title: "Fresh Vegetables Bundle", category: "Food & Grocery", status: "In Stock", image: "https://images.unsplash.com/photo-1618160702438-9b02ab6515c9?w=400" },
+    { id: 6, title: "Modern Apartment", category: "Real Estate", status: "Available", image: "https://images.unsplash.com/photo-1488972685288-c3fd157d7c7a?w=400" },
+    { id: 7, title: "Pet Food & Supplies", category: "Pet Supplies", status: "In Stock", image: "https://images.unsplash.com/photo-1582562124811-c09040d0a901?w=400" },
+    { id: 8, title: "Farm Equipment", category: "Agriculture", status: "Available", image: "https://images.unsplash.com/photo-1452378174528-3090a4bba7b2?w=400" },
   ];
 
   const handleTabClick = (tabId: string) => {
     setActiveTab(tabId);
+    setIsSidebarOpen(false);
+  };
+
+  const handleLogout = () => {
+    setActiveTab("logout");
     setIsSidebarOpen(false);
   };
 
@@ -76,6 +86,8 @@ const Index = () => {
       case "settings":
       case "profile":
         return <ProfileSettings />;
+      case "logout":
+        return <LogoutScreen />;
       default:
         return <Dashboard />;
     }
@@ -97,21 +109,83 @@ const Index = () => {
             <div className="text-xl font-bold text-black">Seller Dashboard</div>
           </div>
 
-          {/* Center: Search Bar */}
-          <div className="hidden md:flex flex-1 max-w-md mx-8 relative">
-            <div className="relative w-full">
+          {/* Center: Search Bar - Hidden when sidebar is open on mobile */}
+          {!isSidebarOpen && (
+            <div className="hidden md:flex flex-1 max-w-md mx-8 relative">
+              <div className="relative w-full">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
+                <input
+                  type="text"
+                  placeholder="Search products by title or category..."
+                  value={searchQuery}
+                  onChange={(e) => handleSearch(e.target.value)}
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
+                />
+                
+                {/* Search Results Dropdown */}
+                {searchResults.length > 0 && (
+                  <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-lg mt-1 max-h-60 overflow-y-auto z-50">
+                    {searchResults.map((product) => (
+                      <div
+                        key={product.id}
+                        onClick={() => handleProductClick(product.id)}
+                        className="flex items-center space-x-3 p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0"
+                      >
+                        <img
+                          src={product.image}
+                          alt={product.title}
+                          className="w-10 h-10 rounded-md object-cover"
+                        />
+                        <div className="flex-1">
+                          <div className="text-sm font-medium text-black">{product.title}</div>
+                          <div className="text-xs text-gray-500">{product.category}</div>
+                        </div>
+                        <span className={`px-2 py-1 text-xs rounded-full ${
+                          product.status === "In Stock" || product.status === "Available" ? "bg-green-100 text-green-800" :
+                          product.status === "Rented" ? "bg-blue-100 text-blue-800" :
+                          "bg-red-100 text-red-800"
+                        }`}>
+                          {product.status}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+          )}
+
+          {/* Right: Welcome + Logout */}
+          <div className="flex items-center space-x-4">
+            <div className="hidden md:block text-sm text-gray-600">
+              Welcome, <span className="font-medium text-black">Ali Traders</span>
+            </div>
+            <button 
+              onClick={handleLogout}
+              className="flex items-center space-x-2 text-gray-700 hover:text-black transition-colors px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50"
+            >
+              <LogOut size={16} />
+              <span className="hidden sm:inline">Logout</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Mobile Search Bar - Hidden when sidebar is open */}
+        {!isSidebarOpen && (
+          <div className="md:hidden px-4 pb-3">
+            <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
               <input
                 type="text"
-                placeholder="Search products by title or category..."
+                placeholder="Search products..."
                 value={searchQuery}
                 onChange={(e) => handleSearch(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
               />
               
-              {/* Search Results Dropdown */}
+              {/* Mobile Search Results */}
               {searchResults.length > 0 && (
-                <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-lg mt-1 max-h-60 overflow-y-auto z-50">
+                <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-lg mt-1 max-h-48 overflow-y-auto z-50">
                   {searchResults.map((product) => (
                     <div
                       key={product.id}
@@ -121,14 +195,14 @@ const Index = () => {
                       <img
                         src={product.image}
                         alt={product.title}
-                        className="w-10 h-10 rounded-md object-cover"
+                        className="w-8 h-8 rounded-md object-cover"
                       />
                       <div className="flex-1">
                         <div className="text-sm font-medium text-black">{product.title}</div>
                         <div className="text-xs text-gray-500">{product.category}</div>
                       </div>
                       <span className={`px-2 py-1 text-xs rounded-full ${
-                        product.status === "In Stock" ? "bg-green-100 text-green-800" :
+                        product.status === "In Stock" || product.status === "Available" ? "bg-green-100 text-green-800" :
                         product.status === "Rented" ? "bg-blue-100 text-blue-800" :
                         "bg-red-100 text-red-800"
                       }`}>
@@ -140,62 +214,7 @@ const Index = () => {
               )}
             </div>
           </div>
-
-          {/* Right: Welcome + Logout */}
-          <div className="flex items-center space-x-4">
-            <div className="hidden md:block text-sm text-gray-600">
-              Welcome, <span className="font-medium text-black">Ali Traders</span>
-            </div>
-            <button className="flex items-center space-x-2 text-gray-700 hover:text-black transition-colors px-3 py-2 border border-gray-300 rounded-md hover:bg-gray-50">
-              <LogOut size={16} />
-              <span className="hidden sm:inline">Logout</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Mobile Search Bar */}
-        <div className="md:hidden px-4 pb-3">
-          <div className="relative">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
-            <input
-              type="text"
-              placeholder="Search products..."
-              value={searchQuery}
-              onChange={(e) => handleSearch(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
-            />
-            
-            {/* Mobile Search Results */}
-            {searchResults.length > 0 && (
-              <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-lg mt-1 max-h-48 overflow-y-auto z-50">
-                {searchResults.map((product) => (
-                  <div
-                    key={product.id}
-                    onClick={() => handleProductClick(product.id)}
-                    className="flex items-center space-x-3 p-3 hover:bg-gray-50 cursor-pointer border-b border-gray-100 last:border-b-0"
-                  >
-                    <img
-                      src={product.image}
-                      alt={product.title}
-                      className="w-8 h-8 rounded-md object-cover"
-                    />
-                    <div className="flex-1">
-                      <div className="text-sm font-medium text-black">{product.title}</div>
-                      <div className="text-xs text-gray-500">{product.category}</div>
-                    </div>
-                    <span className={`px-2 py-1 text-xs rounded-full ${
-                      product.status === "In Stock" ? "bg-green-100 text-green-800" :
-                      product.status === "Rented" ? "bg-blue-100 text-blue-800" :
-                      "bg-red-100 text-red-800"
-                    }`}>
-                      {product.status}
-                    </span>
-                  </div>
-                ))}
-              </div>
-            )}
-          </div>
-        </div>
+        )}
       </header>
 
       {/* Sidebar Overlay for Mobile */}
