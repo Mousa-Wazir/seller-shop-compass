@@ -1,3 +1,4 @@
+
 import { useState, useRef } from "react";
 import { Menu, X, Search, User, MessageSquare, Star, Package, Plus, Settings as SettingsIcon, LogOut } from "lucide-react";
 import Dashboard from "../components/Dashboard";
@@ -31,7 +32,6 @@ const Index = () => {
     { id: "settings", label: "Settings", icon: SettingsIcon },
   ];
 
-  // Updated products with category-specific names and images
   const mockProducts = [
     { id: 1, title: "Vintage Ceramic Table Lamp", category: "Home Decor", status: "In Stock", image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400" },
     { id: 2, title: "Modern Oak Dining Table", category: "Furniture", status: "Rented", image: "https://images.unsplash.com/photo-1586023492125-27b2c045efd7?w=400" },
@@ -43,14 +43,14 @@ const Index = () => {
     { id: 8, title: "Handwoven Basket Collection", category: "Handicrafts", status: "Available", image: "https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400" },
   ];
 
-  const handleTabClick = (tabId: string) => {
+  const handleTabClick = (tabId) => {
     if (tabId !== activeTab) {
       setTabTransitioning(true);
       setTimeout(() => {
         setActiveTab(tabId);
         setTabTransitioning(false);
         lastActiveTab.current = tabId;
-      }, 220); // match animation duration
+      }, 220);
       setIsSidebarOpen(false);
     } else {
       setIsSidebarOpen(false);
@@ -62,7 +62,7 @@ const Index = () => {
     setIsSidebarOpen(false);
   };
 
-  const handleSearch = (query: string) => {
+  const handleSearch = (query) => {
     setSearchQuery(query);
     if (query.trim()) {
       const filtered = mockProducts.filter(product =>
@@ -75,7 +75,7 @@ const Index = () => {
     }
   };
 
-  const handleProductClick = (productId: number) => {
+  const handleProductClick = (productId) => {
     setActiveTab("my-products");
     setSearchQuery("");
     setSearchResults([]);
@@ -87,7 +87,6 @@ const Index = () => {
     setActiveTab("dashboard");
   };
 
-  // Show sign up screen if requested
   if (showSignUp) {
     return (
       <div className="animate-fade-in duration-300">
@@ -149,8 +148,6 @@ const Index = () => {
                   onChange={(e) => handleSearch(e.target.value)}
                   className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
                 />
-                
-                {/* Search Results Dropdown */}
                 {searchResults.length > 0 && (
                   <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-lg mt-1 max-h-60 overflow-y-auto z-50">
                     {searchResults.map((product) => (
@@ -210,8 +207,6 @@ const Index = () => {
                 onChange={(e) => handleSearch(e.target.value)}
                 className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent"
               />
-              
-              {/* Mobile Search Results */}
               {searchResults.length > 0 && (
                 <div className="absolute top-full left-0 right-0 bg-white border border-gray-200 rounded-lg shadow-lg mt-1 max-h-48 overflow-y-auto z-50">
                   {searchResults.map((product) => (
