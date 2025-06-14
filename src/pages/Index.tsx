@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Menu, X, Search, User, MessageSquare, Star, Package, Plus, Settings as SettingsIcon, LogOut } from "lucide-react";
 import Dashboard from "../components/Dashboard";
 import AddProduct from "../components/AddProduct";
@@ -17,6 +17,8 @@ const Index = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState([]);
   const [showSignUp, setShowSignUp] = useState(false);
+  const [tabTransitioning, setTabTransitioning] = useState(false);
+  const lastActiveTab = useRef(activeTab);
 
   const navigationItems = [
     { id: "profile", label: "Profile", icon: User },
@@ -42,8 +44,17 @@ const Index = () => {
   ];
 
   const handleTabClick = (tabId: string) => {
-    setActiveTab(tabId);
-    setIsSidebarOpen(false);
+    if (tabId !== activeTab) {
+      setTabTransitioning(true);
+      setTimeout(() => {
+        setActiveTab(tabId);
+        setTabTransitioning(false);
+        lastActiveTab.current = tabId;
+      }, 220); // match animation duration
+      setIsSidebarOpen(false);
+    } else {
+      setIsSidebarOpen(false);
+    }
   };
 
   const handleLogout = () => {
@@ -78,7 +89,11 @@ const Index = () => {
 
   // Show sign up screen if requested
   if (showSignUp) {
-    return <SignUp onSignUpSuccess={handleSignUpSuccess} />;
+    return (
+      <div className="animate-fade-in duration-300">
+        <SignUp onSignUpSuccess={handleSignUpSuccess} />
+      </div>
+    );
   }
 
   const renderActiveComponent = () => {
@@ -233,7 +248,7 @@ const Index = () => {
       {/* Sidebar Overlay for Mobile */}
       {isSidebarOpen && (
         <div
-          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
+          className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden animate-fade-in"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
@@ -248,17 +263,29 @@ const Index = () => {
           <nav className="space-y-2">
             {navigationItems.map((item) => {
               const Icon = item.icon;
+              const isActive = activeTab === item.id && !tabTransitioning;
               return (
                 <button
                   key={item.id}
                   onClick={() => handleTabClick(item.id)}
-                  className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-colors ${
-                    activeTab === item.id
-                      ? "bg-black text-white"
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
+                  className={`
+                    w-full flex items-center space-x-3 px-4 py-3 rounded-lg text-left transition-all duration-200
+                    relative overflow-hidden group
+                    ${isActive
+                      ? "bg-black text-white animate-scale-in"
+                      : "text-gray-700 hover:bg-gray-100"}
+                    `}
+                  style={{ outline: isActive ? "2px solid #000" : undefined }}
+                  tabIndex={0}
                 >
-                  <Icon size={20} />
+                  <span
+                    className={`
+                      mr-2 transition-transform duration-200 group-hover:scale-110 group-active:scale-105
+                      ${isActive ? "scale-110" : ""}
+                    `}
+                  >
+                    <Icon size={20} />
+                  </span>
                   <span className="font-medium">{item.label}</span>
                 </button>
               );
@@ -267,9 +294,24 @@ const Index = () => {
         </div>
       </aside>
 
-      {/* Main Content */}
-      <main className={`flex-1 pt-16 transition-all duration-300 ${isSidebarOpen ? "lg:ml-0" : ""} lg:ml-64`}>
-        <div className="p-6">
+      {/* Main Content Area with Animation */}
+      <main
+        className={`flex-1 pt-16 transition-all duration-300 ${
+          isSidebarOpen ? "lg:ml-0" : ""
+        } lg:ml-64`}
+      >
+        <div
+          key={activeTab}
+          className={`
+            p-6 
+            transition-all duration-200 
+            ${tabTransitioning ? "animate-fade-out scale-95 opacity-60 pointer-events-none" : "animate-fade-in scale-100 opacity-100"}
+          `}
+          style={{
+            minHeight: "calc(100vh - 4rem)",
+            transition: "opacity 0.2s, transform 0.2s",
+          }}
+        >
           {renderActiveComponent()}
         </div>
       </main>
