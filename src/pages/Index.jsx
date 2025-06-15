@@ -1,3 +1,4 @@
+
 import { useState, useRef } from "react";
 import { Menu, X, Search, User, MessageSquare, Star, Package, Plus, Settings as SettingsIcon, LogOut } from "lucide-react";
 import Dashboard from "../components/Dashboard";
@@ -126,22 +127,23 @@ const Index = () => {
         <div className="flex items-center justify-between h-full px-4">
           {/* Left: Logo + Mobile Menu */}
           <div className="flex items-center space-x-4">
-            {/* Hamburger/menu icon button ONLY on mobile/tablet, never on lg+ */}
+            {/* Hamburger/menu icon ONLY on mobile/tablet (hidden on lg and up) */}
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="p-2 rounded-md text-gray-600 hover:bg-gray-100 transition-colors block md:block lg:hidden xl:hidden 2xl:hidden"
+              className="p-2 rounded-md text-gray-600 hover:bg-gray-100 transition-colors block lg:hidden"
               style={{ zIndex: 2 }}
               aria-label="Toggle sidebar"
             >
               {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
-            <div className="text-xl font-bold text-black whitespace-nowrap ml-0 lg:ml-2">
+            {/* Dashboard Title: Responsive margin/padding */}
+            <div className="text-xl font-bold text-black whitespace-nowrap ml-2 lg:ml-2">
               Seller Dashboard
             </div>
           </div>
           {/* Center: Search Bar - Hidden when sidebar is open on mobile */}
           {!isSidebarOpen && (
-            <div className="hidden md:flex flex-1 max-w-md mx-8 relative">
+            <div className="hidden md:flex flex-1 max-w-md mx-4 md:mx-8 relative">
               <div className="relative w-full">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
                 <input
@@ -198,7 +200,7 @@ const Index = () => {
         </div>
         {/* Mobile Search Bar - Hidden when sidebar is open */}
         {!isSidebarOpen && (
-          <div className="md:hidden px-4 pb-3">
+          <div className="md:hidden px-2 pb-3 pt-2">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400" size={20} />
               <input
@@ -251,9 +253,9 @@ const Index = () => {
 
       {/* Sidebar */}
       <aside
-        className={`fixed lg:static top-0 left-0 h-full bg-white border-r border-gray-200 z-40 w-64 transform transition-transform duration-300 ease-in-out ${
-          isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-        } lg:translate-x-0 lg:block pt-16 lg:pt-16`}
+        className={`fixed lg:static top-0 left-0 h-full bg-white border-r border-gray-200 z-40 w-64 transform transition-transform duration-300 ease-in-out
+          ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
+          lg:translate-x-0 lg:block pt-16 lg:pt-16`}
       >
         <div className="p-4 h-full overflow-y-auto">
           <nav className="space-y-2">
@@ -299,9 +301,9 @@ const Index = () => {
         <div
           key={activeTab}
           className={`
-            p-3 sm:p-4 md:p-6 
+            p-2 xs:p-3 sm:p-4 md:p-6
             max-w-full w-full
-            transition-all duration-200 
+            transition-all duration-200
             ${tabTransitioning ? "animate-fade-out scale-95 opacity-60 pointer-events-none" : "animate-fade-in scale-100 opacity-100"}
           `}
           style={{
@@ -310,8 +312,20 @@ const Index = () => {
           }}
         >
           {/* Responsive container for dashboard content */}
-          <div className="max-w-full w-full mx-auto">
-            {renderActiveComponent()}
+          <div className="w-full max-w-full mx-auto">
+            <div className="w-full">
+              {/* Hide side padding for mobile, apply for md+ */}
+              <div className="w-full">
+                <div className="w-full">
+                  <div className="w-full block">
+                    {/* Responsive: content fits width, grid stacks on mobile */}
+                    <div className="w-full">
+                      {renderActiveComponent()}
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </main>
@@ -320,3 +334,4 @@ const Index = () => {
 };
 
 export default Index;
+
