@@ -1,4 +1,3 @@
-
 import React, { useState, useRef } from "react";
 import Sidebar from "./Sidebar";
 import ProductSearch from "./ProductSearch";
@@ -112,19 +111,20 @@ const Layout = () => {
       <header className="fixed top-0 left-0 right-0 bg-white border-b border-gray-200 z-50 h-16">
         <div className="flex items-center justify-between h-full px-4">
           <div className="flex items-center space-x-4">
-            {/* Hamburger/menu icon ONLY on mobile/tablet (hidden on lg and up) */}
+            {/* Hamburger/Menu icon - ONLY on mobile/tablet (hidden on lg and up) */}
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
               className="p-2 rounded-md text-gray-600 hover:bg-gray-100 transition-colors block lg:hidden"
               style={{ zIndex: 2 }}
-              aria-label="Toggle sidebar"
+              aria-label={isSidebarOpen ? "Close sidebar" : "Open sidebar"}
             >
               {isSidebarOpen ? (
-                <span className="sr-only">Close Sidebar</span>
+                // Only show close (✖) icon when sidebar is open
+                <span className="text-2xl">&times;</span>
               ) : (
-                <span className="sr-only">Open Sidebar</span>
+                // Only show hamburger (☰) when sidebar is closed
+                <span className="text-2xl">&#9776;</span>
               )}
-              {isSidebarOpen ? <span>&#10005;</span> : <span>&#9776;</span>}
             </button>
             <div className="text-xl font-bold text-black whitespace-nowrap ml-2 lg:ml-2">
               Seller Dashboard
@@ -208,11 +208,9 @@ const Layout = () => {
           <div className="w-full max-w-full mx-auto">
             <div className="w-full">
               <div className="w-full">
-                <div className="w-full">
-                  <div className="w-full block">
-                    <div className="w-full">
-                      {renderActiveComponent()}
-                    </div>
+                <div className="w-full block">
+                  <div className="w-full">
+                    {renderActiveComponent()}
                   </div>
                 </div>
               </div>
