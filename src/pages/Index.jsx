@@ -129,16 +129,16 @@ const Index = () => {
             {/* Hamburger/menu icon button ONLY on mobile/tablet, never on lg+ */}
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
-              className="block lg:hidden p-2 rounded-md text-gray-600 hover:bg-gray-100 transition-colors"
-              style={{ zIndex: 2 }} // Make sure it layers above background
+              className="p-2 rounded-md text-gray-600 hover:bg-gray-100 transition-colors block md:block lg:hidden xl:hidden 2xl:hidden"
+              style={{ zIndex: 2 }}
+              aria-label="Toggle sidebar"
             >
               {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
-            <div className="text-xl font-bold text-black whitespace-nowrap">
+            <div className="text-xl font-bold text-black whitespace-nowrap ml-0 lg:ml-2">
               Seller Dashboard
             </div>
           </div>
-
           {/* Center: Search Bar - Hidden when sidebar is open on mobile */}
           {!isSidebarOpen && (
             <div className="hidden md:flex flex-1 max-w-md mx-8 relative">
@@ -182,7 +182,6 @@ const Index = () => {
               </div>
             </div>
           )}
-
           {/* Right: Welcome + Logout */}
           <div className="flex items-center space-x-4">
             <div className="hidden md:block text-sm text-gray-600">
@@ -197,7 +196,6 @@ const Index = () => {
             </button>
           </div>
         </div>
-
         {/* Mobile Search Bar - Hidden when sidebar is open */}
         {!isSidebarOpen && (
           <div className="md:hidden px-4 pb-3">
@@ -301,7 +299,8 @@ const Index = () => {
         <div
           key={activeTab}
           className={`
-            p-6 
+            p-3 sm:p-4 md:p-6 
+            max-w-full w-full
             transition-all duration-200 
             ${tabTransitioning ? "animate-fade-out scale-95 opacity-60 pointer-events-none" : "animate-fade-in scale-100 opacity-100"}
           `}
@@ -310,7 +309,10 @@ const Index = () => {
             transition: "opacity 0.2s, transform 0.2s",
           }}
         >
-          {renderActiveComponent()}
+          {/* Responsive container for dashboard content */}
+          <div className="max-w-full w-full mx-auto">
+            {renderActiveComponent()}
+          </div>
         </div>
       </main>
     </div>
