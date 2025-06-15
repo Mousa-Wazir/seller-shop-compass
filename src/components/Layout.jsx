@@ -1,3 +1,4 @@
+
 import React, { useState, useRef } from "react";
 import Sidebar from "./Sidebar";
 import ProductSearch from "./ProductSearch";
@@ -179,12 +180,21 @@ const Layout = () => {
       )}
 
       {/* Sidebar */}
-      <Sidebar
-        isSidebarOpen={isSidebarOpen}
-        activeTab={activeTab}
-        handleTabClick={handleTabClick}
-        tabTransitioning={tabTransitioning}
-      />
+      {/* Only show sidebar on mobile if open, on desktop lx always visible */}
+      <div
+        className={`
+          ${isSidebarOpen ? "block" : "hidden"} 
+          fixed lg:static top-0 left-0 h-full bg-white border-r border-gray-200 z-50 w-64 pt-16 lg:block transition-transform duration-300
+        `}
+        style={{ minHeight: "100vh" }}
+      >
+        <Sidebar
+          isSidebarOpen={isSidebarOpen}
+          activeTab={activeTab}
+          handleTabClick={handleTabClick}
+          tabTransitioning={tabTransitioning}
+        />
+      </div>
 
       {/* Main Content Area with Animation */}
       <main
@@ -207,11 +217,9 @@ const Layout = () => {
         >
           <div className="w-full max-w-full mx-auto">
             <div className="w-full">
-              <div className="w-full">
-                <div className="w-full block">
-                  <div className="w-full">
-                    {renderActiveComponent()}
-                  </div>
+              <div className="w-full block">
+                <div className="w-full">
+                  {renderActiveComponent()}
                 </div>
               </div>
             </div>
@@ -223,3 +231,4 @@ const Layout = () => {
 };
 
 export default Layout;
+
