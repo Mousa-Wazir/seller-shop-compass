@@ -126,14 +126,17 @@ const Index = () => {
         <div className="flex items-center justify-between h-full px-4">
           {/* Left: Logo + Mobile Menu */}
           <div className="flex items-center space-x-4">
-            {/* Render hamburger/menu icon button ONLY on mobile and tablet, never on lg+ */}
+            {/* Hamburger/menu icon button ONLY on mobile/tablet, never on lg+ */}
             <button
               onClick={() => setIsSidebarOpen(!isSidebarOpen)}
               className="block lg:hidden p-2 rounded-md text-gray-600 hover:bg-gray-100 transition-colors"
+              style={{ zIndex: 2 }} // Make sure it layers above background
             >
               {isSidebarOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
-            <div className="text-xl font-bold text-black">Seller Dashboard</div>
+            <div className="text-xl font-bold text-black whitespace-nowrap">
+              Seller Dashboard
+            </div>
           </div>
 
           {/* Center: Search Bar - Hidden when sidebar is open on mobile */}
